@@ -19,8 +19,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
         
-      - name: Set AWS Region
-        run: export AWS_DEFAULT_REGION=us-east-1
 
       # CloudFormation Lint
       - name: Cfn Lint
@@ -69,7 +67,7 @@ jobs:
         id: build-image
         if: steps.detect-dockerfile-changes.outputs.any_modified == 'true'
         env:
-          AWS_REGION: ${{ vars.AWS_REGION }}
+          AWS_REGION: us-east-1
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ vars.ECR_REPO_NAME }}
           IMAGE_TAG: ${{ github.sha }}
