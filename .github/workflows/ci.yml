@@ -6,6 +6,7 @@ on:
       image-tag:
         description: "image tag"
         value: ${{ jobs.build-and-test.outputs.image-tag }}
+      
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -20,8 +21,7 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Set AWS Region
-        run: export AWS_DEFAULT_REGION=us-east-1
-        
+        run: echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
       # CloudFormation Lint
       - name: Cfn Lint
@@ -58,7 +58,10 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
         with:
-          mask-password: 'true'
+          mask-password: true
+          registry-type: private
+          skip-logout: false
+          region: us-east-1
 
       - name: Detect Dockerfile changes
         id: detect-dockerfile-changes
@@ -70,7 +73,6 @@ jobs:
         id: build-image
         if: steps.detect-dockerfile-changes.outputs.any_modified == 'true'
         env:
-          AWS_REGION: ${{ vars.AWS_REGION }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ vars.ECR_REPO_NAME }}
           IMAGE_TAG: ${{ github.sha }}
