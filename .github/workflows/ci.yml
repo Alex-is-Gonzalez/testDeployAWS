@@ -19,6 +19,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
         
+      - name: Set AWS Region
+        run: export AWS_DEFAULT_REGION= ${{ vars.AWS_REGION }}
+        
 
       # CloudFormation Lint
       - name: Cfn Lint
