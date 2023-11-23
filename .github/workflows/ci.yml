@@ -67,7 +67,7 @@ jobs:
         id: build-image
         if: steps.detect-dockerfile-changes.outputs.any_modified == 'true'
         env:
-          AWS_REGION: us-east-1
+          AWS_REGION: ${{ vars.AWS_REGION }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ vars.ECR_REPO_NAME }}
           IMAGE_TAG: ${{ github.sha }}
